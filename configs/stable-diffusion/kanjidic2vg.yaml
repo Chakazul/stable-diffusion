@@ -88,6 +88,8 @@ data:
           params:
             size: 128  #512
         - target: torchvision.transforms.RandomHorizontalFlip
+        image_column: image  #new
+        text_column: meanings  #new
     validation:
       target: ldm.data.simple.TextOnly
       params:
@@ -97,7 +99,7 @@ data:
         - "Yoda"
         - "An epic landscape photo of a mountain"
         output_size: 128  #512
-        n_gpus: 2 # small hack to sure we see all our samples
+        n_gpus: 1  #2 # small hack to sure we see all our samples
 
 
 lightning:
