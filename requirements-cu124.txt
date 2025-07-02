@@ -7,14 +7,14 @@ opencv-python==4.5.5.64
 pudb==2019.2
 imageio==2.9.0
 imageio-ffmpeg==0.4.2
-pytorch-lightning
-omegaconf
+pytorch-lightning==1.4.2
+omegaconf==2.1.1
 test-tube>=0.7.5
 streamlit>=0.73.1
 einops==0.3.0
 torch-fidelity==0.3.0
 transformers==4.30.2
-kornia
+kornia==0.6
 webdataset==0.2.5
 torchmetrics==0.6.0
 fire==0.4.0
