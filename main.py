@@ -14,7 +14,7 @@ from PIL import Image
 from pytorch_lightning import seed_everything
 from pytorch_lightning.trainer import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint, Callback, LearningRateMonitor
-from pytorch_lightning.utilities.distributed import rank_zero_only
+from pytorch_lightning.utilities import rank_zero_only
 from pytorch_lightning.utilities import rank_zero_info
 
 from ldm.data.base import Txt2ImgIterableBaseDataset
@@ -147,7 +147,7 @@ def get_parser(**parser_kwargs):
 
 def nondefault_trainer_args(opt):
     parser = argparse.ArgumentParser()
-    parser = Trainer.add_argparse_args(parser)
+    # parser = Trainer.add_argparse_args(parser)
     args = parser.parse_args([])
     return sorted(k for k in vars(args) if getattr(opt, k) != getattr(args, k))
 
@@ -326,7 +326,7 @@ class ImageLogger(Callback):
         self.batch_freq = batch_frequency
         self.max_images = max_images
         self.logger_log_images = {
-            pl.loggers.TestTubeLogger: self._testtube,
+            pl.loggers.TensorBoardLogger: self._testtube,
         }
         self.log_steps = [2 ** n for n in range(int(np.log2(self.batch_freq)) + 1)]
         if not increase_log_steps:
@@ -461,7 +461,7 @@ class SingleImageLogger(Callback):
         self.batch_freq = batch_frequency
         self.max_images = max_images
         self.logger_log_images = {
-            pl.loggers.TestTubeLogger: self._testtube,
+            pl.loggers.TensorBoardLogger: self._testtube,
         }
         self.log_steps = [2 ** n for n in range(int(np.log2(self.batch_freq)) + 1)]
         if not increase_log_steps:
@@ -602,7 +602,7 @@ if __name__ == "__main__":
     sys.path.append(os.getcwd())
 
     parser = get_parser()
-    parser = Trainer.add_argparse_args(parser)
+    # parser = Trainer.add_argparse_args(parser)
 
     opt, unknown = parser.parse_known_args()
     if opt.name and opt.resume:
@@ -719,7 +719,7 @@ if __name__ == "__main__":
                 }
             },
             "testtube": {
-                "target": "pytorch_lightning.loggers.TestTubeLogger",
+                "target": "pytorch_lightning.loggers.TensorBoardLogger",
                 "params": {
                     "name": "testtube",
                     "save_dir": logdir,
@@ -829,8 +829,9 @@ if __name__ == "__main__":
         if not "plugins" in trainer_kwargs:
             trainer_kwargs["plugins"] = list()
         if not lightning_config.get("find_unused_parameters", True):
-            from pytorch_lightning.plugins import DDPPlugin
-            trainer_kwargs["plugins"].append(DDPPlugin(find_unused_parameters=False))
+            # from pytorch_lightning.plugins import DDPPlugin
+            # trainer_kwargs["plugins"].append(DDPPlugin(find_unused_parameters=False))
+            pass
         if MULTINODE_HACKS:
             # disable resume from hpc ckpts
             # NOTE below only works in later versions
